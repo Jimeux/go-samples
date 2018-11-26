@@ -1,2 +1,2 @@
 # go-samples
-Sample code form blog articles about Go
+Sample code for blog articles about Go.
