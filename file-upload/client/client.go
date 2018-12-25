@@ -7,15 +7,24 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path"
 )
 
 func main() {
 	url := "http://localhost:3000/upload"
-	fieldname := "file"
-	filename := "hello.txt"
-	file, err := os.Open(filename)
+	fieldName := "file"
+	fileName := "hello.txt"
+
+	dir, err := os.Getwd()
 	handleError(err)
 
+	file, err := os.Open(path.Join(dir, fileName))
+	handleError(err)
+
+	uploadFile(file, url, fieldName, fileName)
+}
+
+func uploadFile(file io.Reader, url, fieldName, fileName string)  {
 	// リクエストボディのデータを受け取るio.Writerを生成する。
 	body := &bytes.Buffer{}
 
@@ -25,9 +34,9 @@ func main() {
 
 	// ファイルに使うパートを生成する。
 	// ヘッダ以外はデータは書き込まれない。
-	// fieldnameとfilenameの値がヘッダに含められる。
+	// fieldNameとfileNameの値がヘッダに含められる。
 	// ファイルデータを書き込むio.Writerが返却される。
-	fw, err := mw.CreateFormFile(fieldname, filename)
+	fw, err := mw.CreateFormFile(fieldName, fileName)
 
 	// fwで作ったパートにファイルのデータを書き込む
 	_, err = io.Copy(fw, file)
@@ -44,6 +53,34 @@ func main() {
 	resp, err := http.Post(url, contentType, body)
 	handleError(err)
 
+	err = resp.Body.Close()
+	handleError(err)
+}
+
+func uploadFileAsync(file io.Reader, url, fieldName, fileName string) {
+	pr, pw := io.Pipe()
+	mw := multipart.NewWriter(pw)
+
+	go func() {
+		defer pw.Close()
+		defer mw.Close()
+		fw, err := mw.CreateFormFile(fieldName, fileName)
+		if err != nil {
+			return
+		}
+		if _, err := io.Copy(fw, file); err != nil {
+			return
+		}
+	}()
+
+	req, err := http.NewRequest(http.MethodPost, url, pr)
+	handleError(err)
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+	req.Header.Set("Connection", "Keep-Alive")
+	req.Header.Set("Transfer-Encoding", "chunked")
+
+	resp, err := http.DefaultClient.Do(req)
+	handleError(err)
 	err = resp.Body.Close()
 	handleError(err)
 }

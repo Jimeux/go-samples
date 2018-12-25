@@ -6,13 +6,13 @@ GO言語のmime/multipartパッケージでファイルをアップロード
 
 サーバーを起動する
 ```
-go run server.go
+go run server/server.go
 ```
 
 クライントを別のターミナルで実行する
 
 ```
-go run client.go
+go run client/client.go
 ```
 
 * サーバーのターミナルでリクエストのデバッグ情報が出力される

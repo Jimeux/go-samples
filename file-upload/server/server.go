@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"path"
 	"time"
 )
 
@@ -32,14 +34,21 @@ func handleUploadCSV(w http.ResponseWriter, r *http.Request) {
 	handleError(err)
 	defer formFile.Close()
 
-	// データを保存するファイルを開く
-	filename := fmt.Sprintf("uploaded_%d.txt", time.Now().UnixNano())
-	saveFile, err := os.Create(filename)
-	handleError(err)
-	defer saveFile.Close()
+	if true { // TODO saveToFile flag
+		dir, err := os.Getwd()
+		handleError(err)
 
-	// ファイルにデータを書き込む
-	_, err = io.Copy(saveFile, formFile)
+		// データを保存するファイルを開く
+		filename := fmt.Sprintf("uploaded_%d.txt", time.Now().UnixNano())
+		saveFile, err := os.Create(path.Join(dir, filename))
+		handleError(err)
+		defer saveFile.Close()
+
+		// ファイルにデータを書き込む
+		_, err = io.Copy(saveFile, formFile)
+	} else {
+		_, err = io.Copy(new(bytes.Buffer), formFile)
+	}
 	handleError(err)
 
 	w.WriteHeader(http.StatusCreated)
