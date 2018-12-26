@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -12,7 +13,14 @@ import (
 	"time"
 )
 
+var (
+	inMemory bool
+)
+
 func main() {
+	flag.BoolVar(&inMemory, "in-mem", false, "Add -in-mem flag for in-memory-only uploads")
+	flag.Parse()
+
 	http.HandleFunc("/upload", handleUploadCSV)
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
@@ -34,7 +42,9 @@ func handleUploadCSV(w http.ResponseWriter, r *http.Request) {
 	handleError(err)
 	defer formFile.Close()
 
-	if true { // TODO saveToFile flag
+	if inMemory {
+		_, err = io.Copy(new(bytes.Buffer), formFile)
+	} else {
 		dir, err := os.Getwd()
 		handleError(err)
 
@@ -46,8 +56,6 @@ func handleUploadCSV(w http.ResponseWriter, r *http.Request) {
 
 		// ファイルにデータを書き込む
 		_, err = io.Copy(saveFile, formFile)
-	} else {
-		_, err = io.Copy(new(bytes.Buffer), formFile)
 	}
 	handleError(err)
 

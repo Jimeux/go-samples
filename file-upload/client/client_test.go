@@ -1,48 +1,37 @@
 package main
 
 import (
-	"bytes"
-	"io"
-	"net/http"
-	"net/http/httptest"
 	"os"
 	"path"
 	"testing"
 )
 
-func uploadServer() *httptest.Server {
-	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		formFile, _, _ := r.FormFile("file")
-		defer formFile.Close()
-		_, _ = io.Copy(new(bytes.Buffer), formFile)
-		w.WriteHeader(http.StatusCreated)
-	}))
+func helloFileName() string {
+	dir, err := os.Getwd()
+	handleError(err)
+	return path.Join(dir, "..", fileName)
 }
 
 func BenchmarkUploadFile(b *testing.B) {
-	// server := uploadServer()
-	dir, err := os.Getwd()
-	handleError(err)
-	fileName := path.Join(dir,"..", "hello.txt")
+	fileName := helloFileName()
 
 	for i := 0; i < b.N; i++ {
 		file, err := os.Open(fileName)
 		handleError(err)
-		uploadFile(file, "http://localhost:3000", "file", fileName)
-		file.Close()
+		uploadFile(file, uploadURL, fieldName, fileName)
+		err = file.Close()
+		handleError(err)
 	}
 }
 
 func BenchmarkUploadFileAsync(b *testing.B) {
-	// server := uploadServer()
-	dir, err := os.Getwd()
-	handleError(err)
-	fileName := path.Join(dir,"..", "hello.txt")
+	fileName := helloFileName()
 
 	for i := 0; i < b.N; i++ {
 		file, err := os.Open(fileName)
 		handleError(err)
-		uploadFileAsync(file, "http://localhost:3000", "file", fileName)
-		file.Close()
+		uploadFileAsync(file, uploadURL, fieldName, fileName)
+		err = file.Close()
+		handleError(err)
 	}
 }

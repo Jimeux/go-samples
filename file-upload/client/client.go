@@ -10,18 +10,20 @@ import (
 	"path"
 )
 
-func main() {
-	url := "http://localhost:3000/upload"
-	fieldName := "file"
-	fileName := "hello.txt"
+var (
+	uploadURL = "http://localhost:3000/upload"
+	fieldName = "file"
+	fileName  = "hello.txt"
+)
 
+func main() {
 	dir, err := os.Getwd()
 	handleError(err)
 
 	file, err := os.Open(path.Join(dir, fileName))
 	handleError(err)
 
-	uploadFile(file, url, fieldName, fileName)
+	uploadFile(file, uploadURL, fieldName, fileName)
 }
 
 func uploadFile(file io.Reader, url, fieldName, fileName string)  {
