@@ -1,25 +1,37 @@
 # file-upload
 
-GO言語のmime/multipartパッケージでファイルをアップロード
+Go言語のmime/multipartパッケージでファイルをアップロード
 
 ## How to Use It
 
-### サーバー＆クライアントを起動する
+#### サーバーを起動する
 ```
 go run server/server.go
+```
 
-# 別のターミナルを開く
+#### 同期的クライントによるリクエスト
+```
 go run client/client.go
 ```
 
+#### `io.Pipe`クライントによるリクエスト
+```
+go run client-async/client.go
+```
+
 * サーバーのターミナルでリクエストのデバッグ情報が出力される
-* `uploaded_1543223947765718937.txt`のような名前のあるファイルが作成される
+* リクエストごとに`uploaded_1543223947765718937.txt`のような名前のあるファイルが作成される
 
-### ベンチマーク
+## ベンチマーク
 
+#### テスト用のサーバーを起動する
 ```
 go run server/server.go -in-mem
+```
 
-# 別のターミナルを開く
+#### ベンチマークを実行する
+
+```
 go test -bench=. ./client -benchmem
+go test -bench=. ./client-async -benchmem
 ```

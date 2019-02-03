@@ -12,13 +12,13 @@ func helloFileName() string {
 	return path.Join(dir, "..", fileName)
 }
 
-func BenchmarkUploadFile(b *testing.B) {
+func BenchmarkUploadFileAsync(b *testing.B) {
 	fileName := helloFileName()
 
 	for i := 0; i < b.N; i++ {
 		file, err := os.Open(fileName)
 		handleError(err)
-		uploadFile(file, uploadURL, fieldName, fileName)
+		uploadFileAsync(file, uploadURL, fieldName, fileName)
 		err = file.Close()
 		handleError(err)
 	}

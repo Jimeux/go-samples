@@ -59,34 +59,6 @@ func uploadFile(file io.Reader, url, fieldName, fileName string)  {
 	handleError(err)
 }
 
-func uploadFileAsync(file io.Reader, url, fieldName, fileName string) {
-	pr, pw := io.Pipe()
-	mw := multipart.NewWriter(pw)
-
-	go func() {
-		defer pw.Close()
-		defer mw.Close()
-		fw, err := mw.CreateFormFile(fieldName, fileName)
-		if err != nil {
-			return
-		}
-		if _, err := io.Copy(fw, file); err != nil {
-			return
-		}
-	}()
-
-	req, err := http.NewRequest(http.MethodPost, url, pr)
-	handleError(err)
-	req.Header.Set("Content-Type", mw.FormDataContentType())
-	req.Header.Set("Connection", "Keep-Alive")
-	req.Header.Set("Transfer-Encoding", "chunked")
-
-	resp, err := http.DefaultClient.Do(req)
-	handleError(err)
-	err = resp.Body.Close()
-	handleError(err)
-}
-
 func handleError(err error) {
 	if err != nil {
 		log.Fatal(err)
