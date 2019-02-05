@@ -1,16 +1,26 @@
 package main
 
 import (
+	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"path"
 	"time"
 )
 
+var (
+	inMemory bool
+)
+
 func main() {
+	flag.BoolVar(&inMemory, "in-mem", false, "Add -in-mem flag for in-memory-only uploads")
+	flag.Parse()
+
 	http.HandleFunc("/upload", handleUploadCSV)
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
@@ -32,14 +42,21 @@ func handleUploadCSV(w http.ResponseWriter, r *http.Request) {
 	handleError(err)
 	defer formFile.Close()
 
-	// データを保存するファイルを開く
-	filename := fmt.Sprintf("uploaded_%d.txt", time.Now().UnixNano())
-	saveFile, err := os.Create(filename)
-	handleError(err)
-	defer saveFile.Close()
+	if inMemory {
+		_, err = io.Copy(new(bytes.Buffer), formFile)
+	} else {
+		dir, err := os.Getwd()
+		handleError(err)
 
-	// ファイルにデータを書き込む
-	_, err = io.Copy(saveFile, formFile)
+		// データを保存するファイルを開く
+		filename := fmt.Sprintf("uploaded_%d.txt", time.Now().UnixNano())
+		saveFile, err := os.Create(path.Join(dir, filename))
+		handleError(err)
+		defer saveFile.Close()
+
+		// ファイルにデータを書き込む
+		_, err = io.Copy(saveFile, formFile)
+	}
 	handleError(err)
 
 	w.WriteHeader(http.StatusCreated)

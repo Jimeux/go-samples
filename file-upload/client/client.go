@@ -7,15 +7,26 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path"
+)
+
+var (
+	uploadURL = "http://localhost:3000/upload"
+	fieldName = "file"
+	fileName  = "hello.txt"
 )
 
 func main() {
-	url := "http://localhost:3000/upload"
-	fieldname := "file"
-	filename := "hello.txt"
-	file, err := os.Open(filename)
+	dir, err := os.Getwd()
 	handleError(err)
 
+	file, err := os.Open(path.Join(dir, fileName))
+	handleError(err)
+
+	uploadFile(file, uploadURL, fieldName, fileName)
+}
+
+func uploadFile(file io.Reader, url, fieldName, fileName string)  {
 	// リクエストボディのデータを受け取るio.Writerを生成する。
 	body := &bytes.Buffer{}
 
@@ -25,9 +36,9 @@ func main() {
 
 	// ファイルに使うパートを生成する。
 	// ヘッダ以外はデータは書き込まれない。
-	// fieldnameとfilenameの値がヘッダに含められる。
+	// fieldNameとfileNameの値がヘッダに含められる。
 	// ファイルデータを書き込むio.Writerが返却される。
-	fw, err := mw.CreateFormFile(fieldname, filename)
+	fw, err := mw.CreateFormFile(fieldName, fileName)
 
 	// fwで作ったパートにファイルのデータを書き込む
 	_, err = io.Copy(fw, file)
