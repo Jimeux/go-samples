@@ -1,6 +1,6 @@
 # generics-proposal
 
-連結リストの実装でGo言語のジェネリクスの[ドラフト](https://go.googlesource.com/proposal/+/refs/heads/master/design/go2draft-type-parameters.md#omissions) を触ってみる
+[連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-proposal-linked-list-4d1174e2355d)
 
 ## How to Use It
 

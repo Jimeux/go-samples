@@ -6,4 +6,4 @@ Go言語に関するブログ記事のサンプルレポジトリです。
 - [Go言語のio.Pipeでファイルを効率よくアップロードする方法](https://medium.com/eureka-engineering/file-uploads-in-go-with-io-pipe-75519dfa647b)
 
 ### [/generics-proposal](https://github.com/Jimeux/go-samples/tree/master/generics-proposal)
-- [連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](TODO)
+- [連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-proposal-linked-list-4d1174e2355d)
