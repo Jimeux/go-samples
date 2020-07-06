@@ -1,0 +1,32 @@
+package list
+
+// Ordered is a constraint for all basic types with natural ordering
+type Ordered interface {
+	type int, int8, int16, int32, int64,
+		uint, uint8, uint16, uint32, uint64, uintptr,
+		float32, float64,
+		string
+}
+
+// Summable is a constraint for types that may be added together
+type Summable(type T) interface {
+	Add(t T) T
+}
+
+// Sum calculates the sum of all T elements in l for Summable types
+func Sum(type T Summable)(l *List(T)) T {
+	var sum T
+	for n := l.head; n != nil; n = n.next {
+		sum = sum.Add(n.value)
+	}
+	return sum
+}
+
+// Sum calculates the sum of all T elements in l for Ordered types
+func SumOrdered(type T Ordered)(l *List(T)) T {
+	var sum T
+	for n := l.head; n != nil; n = n.next {
+		sum += n.value
+	}
+	return sum
+}

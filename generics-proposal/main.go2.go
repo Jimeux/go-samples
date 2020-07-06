@@ -1,0 +1,76 @@
+package main
+
+import (
+	"fmt"
+
+	"github.com/Jimeux/go-samples/generics-proposal/list"
+	"github.com/Jimeux/go-samples/generics-proposal/point"
+)
+
+func main() {
+	// sample 1
+	intList := list.NewList(int)()
+	stringList := list.NewList(string)()
+
+	// sample 2
+	intList.AddFirst(66)
+	intList.AddFirst(65)
+	intList.AddLast(67)
+	intList.Print() 	// [65, 66, 67]
+
+	stringList.AddFirst("B")
+	stringList.AddLast("C")
+	stringList.AddFirst("A")
+	stringList.Print() 	// [A, B, C]
+
+	// sample 3
+	filterIntList := list.Filter(intList, func(i int) bool {
+		return i % 2 == 0
+	})
+	filterIntList.Print() // [66]
+
+	filterStringList := list.Filter(stringList, func(s string) bool {
+		return s > "A"
+	})
+	filterStringList.Print() // [B, C]
+
+	// sample 4
+	intToString := list.Map(intList, func(i int) string {
+		return string(rune(i))
+	})
+	intToString.Print() // [s1, s2, s3]
+
+	stringToInt := list.Map(stringList, func(s string) int {
+		return int(rune(s[0]))
+	})
+	stringToInt.Print() // [65, 66, 67]
+
+	fmt.Println(list.SumOrdered(intList))    // 198
+	fmt.Println(list.SumOrdered(stringList)) // ABC
+
+	pointList := list.NewList(point.Point)()
+	pointList.AddLast(point.Point{1,1})
+	pointList.AddLast(point.Point{2,2})
+	pointList.AddLast(point.Point{3,3})
+	pointList.Print() // [{1 1}, {2 2}, {3 3}]
+
+	fmt.Println(list.Sum(pointList)) // {6, 6}
+
+	// Other
+	flatMappedList := list.FlatMap(intList, flatMapper)
+	flatMappedList.Print() // [65, 65, 66, 66, 67, 67]
+
+	list.ForEach(intList, func(i int) int {
+		return i * 2
+	})
+	intList.Print() // [130, 132, 134]
+}
+
+// The current version of go2go doesn't allow
+// this function to be defined inline.
+func flatMapper(i int) *list.List(int) {
+	l := list.NewList(int)()
+	l.AddLast(i)
+	l.AddLast(i)
+	return l
+}
