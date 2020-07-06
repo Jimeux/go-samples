@@ -1,0 +1,60 @@
+package list
+
+import (
+	"fmt"
+)
+
+type node(type T) struct {
+	value T
+	prev *node(T)
+	next *node(T)
+}
+
+// List is a simple generic doubly-linked list implementation
+type List(type T) struct {
+	head *node(T)
+	last *node(T)
+}
+
+func NewList(type T)() *List(T) {
+	return &List(T){}
+}
+
+// AddFirst adds an item to the beginning of l
+func (l *List(T)) AddFirst(item T) {
+	l.head = &node(T){
+		value: item,
+		next:  l.head,
+	}
+
+	if l.last == nil {
+		l.last = l.head
+	}
+}
+
+// AddLast adds an item to the end of l
+func (l *List(T)) AddLast(item T) {
+	n := &node(T){value: item}
+
+	if l.head == nil {
+		l.head = n
+		l.last = n
+		return
+	}
+
+	l.last.next = n
+	n.prev = l.last
+	l.last = n
+}
+
+// Print prints a string representation of l, e.g. [1, 2, 3]
+func (l *List(T)) Print() {
+	fmt.Print("[")
+	for n := l.head; n != nil; n = n.next {
+		fmt.Print(n.value)
+		if n != l.last {
+			fmt.Print(", ")
+		}
+	}
+	fmt.Println("]")
+}
