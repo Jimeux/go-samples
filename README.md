@@ -5,5 +5,5 @@ Go言語に関するブログ記事のサンプルレポジトリです。
 - [Go言語のmime/multipartパッケージでファイルをアップロードしましょう](https://medium.com/eureka-engineering/multipart-file-upload-in-golang-c4a8eb15a3ee)
 - [Go言語のio.Pipeでファイルを効率よくアップロードする方法](https://medium.com/eureka-engineering/file-uploads-in-go-with-io-pipe-75519dfa647b)
 
-### [/generics-proposal](https://github.com/Jimeux/go-samples/tree/master/generics-proposal)
-- [連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-proposal-linked-list-4d1174e2355d)
+### [/generics-design-draft](https://github.com/Jimeux/go-samples/tree/master/generics-design-draft)
+- [連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-design-draft-linked-list-4d1174e2355d)

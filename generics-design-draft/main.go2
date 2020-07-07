@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/Jimeux/go-samples/generics-proposal/list"
-	"github.com/Jimeux/go-samples/generics-proposal/point"
+	"github.com/Jimeux/go-samples/generics-design-draft/list"
+	"github.com/Jimeux/go-samples/generics-design-draft/point"
 )
 
 func main() {

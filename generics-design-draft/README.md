@@ -1,6 +1,6 @@
-# generics-proposal
+# generics-design-draft
 
-[連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-proposal-linked-list-4d1174e2355d)
+[連結リストの実装でGo言語のジェネリクスのドラフトを触ってみる](https://medium.com/eureka-engineering/golang-generics-design-draft-linked-list-4d1174e2355d)
 
 ## How to Use It
 
