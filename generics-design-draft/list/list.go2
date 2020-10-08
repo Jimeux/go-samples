@@ -4,25 +4,25 @@ import (
 	"fmt"
 )
 
-type node(type T) struct {
+type node[T any] struct {
 	value T
-	prev *node(T)
-	next *node(T)
+	prev *node[T]
+	next *node[T]
 }
 
 // List is a simple generic doubly-linked list implementation
-type List(type T) struct {
-	head *node(T)
-	last *node(T)
+type List[T any] struct {
+	head *node[T]
+	last *node[T]
 }
 
-func NewList(type T)() *List(T) {
-	return &List(T){}
+func NewList[T any]() *List[T] {
+	return &List[T]{}
 }
 
 // AddFirst adds an item to the beginning of l
-func (l *List(T)) AddFirst(item T) {
-	l.head = &node(T){
+func (l *List[T]) AddFirst(item T) {
+	l.head = &node[T]{
 		value: item,
 		next:  l.head,
 	}
@@ -33,8 +33,8 @@ func (l *List(T)) AddFirst(item T) {
 }
 
 // AddLast adds an item to the end of l
-func (l *List(T)) AddLast(item T) {
-	n := &node(T){value: item}
+func (l *List[T]) AddLast(item T) {
+	n := &node[T]{value: item}
 
 	if l.head == nil {
 		l.head = n
@@ -48,7 +48,7 @@ func (l *List(T)) AddLast(item T) {
 }
 
 // Print prints a string representation of l, e.g. [1, 2, 3]
-func (l *List(T)) Print() {
+func (l *List[T]) Print() {
 	fmt.Print("[")
 	for n := l.head; n != nil; n = n.next {
 		fmt.Print(n.value)

@@ -9,12 +9,12 @@ type Ordered interface {
 }
 
 // Summable is a constraint for types that may be added together
-type Summable(type T) interface {
+type Summable[T any] interface {
 	Add(t T) T
 }
 
 // Sum calculates the sum of all T elements in l for Summable types
-func Sum(type T Summable)(l *List(T)) T {
+func Sum[T Summable[T]](l *List[T]) T {
 	var sum T
 	for n := l.head; n != nil; n = n.next {
 		sum = sum.Add(n.value)
@@ -23,7 +23,7 @@ func Sum(type T Summable)(l *List(T)) T {
 }
 
 // Sum calculates the sum of all T elements in l for Ordered types
-func SumOrdered(type T Ordered)(l *List(T)) T {
+func SumOrdered[T Ordered](l *List[T]) T {
 	var sum T
 	for n := l.head; n != nil; n = n.next {
 		sum += n.value

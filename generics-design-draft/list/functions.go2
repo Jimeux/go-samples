@@ -1,8 +1,8 @@
 package list
 
 // Filter creates a new list for elemnts in l where pred is true
-func Filter(type T)(l *List(T), pred func(T) bool) *List(T) {
-	dest := NewList(T)()
+func Filter[T any](l *List[T], pred func(T) bool) *List[T] {
+	dest := NewList[T]()
 	for n := l.head; n != nil; n = n.next {
 		if pred(n.value) {
 			dest.AddLast(n.value)
@@ -12,8 +12,8 @@ func Filter(type T)(l *List(T), pred func(T) bool) *List(T) {
 }
 
 // Map applies fn to all elements in l, and returns a new List
-func Map(type T, U)(l *List(T), fn func(T) U) *List(U) {
-	dest := NewList(U)()
+func Map[T, U any](l *List[T], fn func(T) U) *List[U] {
+	dest := NewList[U]()
 	for n := l.head; n != nil; n = n.next {
 		value := fn(n.value)
 		dest.AddLast(value)
@@ -22,18 +22,18 @@ func Map(type T, U)(l *List(T), fn func(T) U) *List(U) {
 }
 
 // ForEach applices fn to all elements in l in place (mutation)
-func ForEach(type T)(l *List(T), fn func(T) T) {
+func ForEach[T any](l *List[T], fn func(T) T) {
 	for n := l.head; n != nil; n = n.next {
 		n.value = fn(n.value)
 	}
 }
 
 // FlatMap applies fn to all elements in l and flattens the result into a single List(U)
-func FlatMap(type T, U)(l *List(T), fn func(T) *List(U)) *List(U) {
+func FlatMap[T, U any](l *List[T], fn func(T) *List[U]) *List[U] {
 	// map
 	lists := Map(l, fn)
 	// flatten
-	dest := NewList(U)()
+	dest := NewList[U]()
 	for n := lists.head; n != nil; n = n.next {
 		for m := n.value.head; m != nil; m = m.next {
 			dest.AddLast(m.value)
